@@ -1,72 +1,72 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Plus, Search } from "lucide-react"
-import Link from "next/link"
-import { TodoCard } from "@/components/todo-card"
-import type { Todo } from "@/lib/db"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Plus, Search } from "lucide-react";
+import Link from "next/link";
+import { TodoCard } from "@/components/todo-card";
+import type { Todo } from "@/lib/db";
 
 export default function HomePage() {
-  const [todos, setTodos] = useState<Todo[]>([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [loading, setLoading] = useState(true)
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchTodos()
-  }, [])
+    fetchTodos();
+  }, []);
 
   const fetchTodos = async () => {
     try {
-      const response = await fetch("/api/todos")
+      const response = await fetch("/api/todos");
       if (response.ok) {
-        const data = await response.json()
-        setTodos(data)
+        const data = await response.json();
+        setTodos(data);
       }
     } catch (error) {
-      console.error("Error fetching todos:", error)
+      console.error("Error fetching todos:", error);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const handleToggle = async (id: number) => {
+  const handleToggle = async (id: string) => {
     try {
       const response = await fetch(`/api/todos/${id}`, {
         method: "PATCH",
-      })
+      });
       if (response.ok) {
-        fetchTodos()
+        fetchTodos();
       }
     } catch (error) {
-      console.error("Error toggling todo:", error)
+      console.error("Error toggling todo:", error);
     }
-  }
+  };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this todo?")) {
       try {
         const response = await fetch(`/api/todos/${id}`, {
           method: "DELETE",
-        })
+        });
         if (response.ok) {
-          fetchTodos()
+          fetchTodos();
         }
       } catch (error) {
-        console.error("Error deleting todo:", error)
+        console.error("Error deleting todo:", error);
       }
     }
-  }
+  };
 
   const filteredTodos = todos.filter(
     (todo) =>
       todo.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      todo.description.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+      todo.description.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const completedCount = todos.filter((todo) => todo.completed).length
-  const totalCount = todos.length
+  const completedCount = todos.filter((todo) => todo.completed).length;
+  const totalCount = todos.length;
 
   if (loading) {
     return (
@@ -76,7 +76,7 @@ export default function HomePage() {
           <p className="mt-4 text-gray-600">Loading todos...</p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -85,9 +85,12 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Todo Dashboard</h1>
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+              Todo Dashboard
+            </h1>
             <p className="text-gray-600">
-              Manage your tasks efficiently. {completedCount} of {totalCount} completed.
+              Manage your tasks efficiently. {completedCount} of {totalCount}{" "}
+              completed.
             </p>
           </div>
 
@@ -113,16 +116,22 @@ export default function HomePage() {
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
             <div className="bg-white p-6 rounded-lg shadow-sm border">
-              <h3 className="text-lg font-semibold text-gray-900">Total Tasks</h3>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Total Tasks
+              </h3>
               <p className="text-3xl font-bold text-blue-600">{totalCount}</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-sm border">
               <h3 className="text-lg font-semibold text-gray-900">Completed</h3>
-              <p className="text-3xl font-bold text-green-600">{completedCount}</p>
+              <p className="text-3xl font-bold text-green-600">
+                {completedCount}
+              </p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-sm border">
               <h3 className="text-lg font-semibold text-gray-900">Remaining</h3>
-              <p className="text-3xl font-bold text-orange-600">{totalCount - completedCount}</p>
+              <p className="text-3xl font-bold text-orange-600">
+                {totalCount - completedCount}
+              </p>
             </div>
           </div>
 
@@ -136,7 +145,9 @@ export default function HomePage() {
                 {searchTerm ? "No todos found" : "No todos yet"}
               </h3>
               <p className="text-gray-600 mb-6">
-                {searchTerm ? "Try adjusting your search terms" : "Get started by creating your first todo"}
+                {searchTerm
+                  ? "Try adjusting your search terms"
+                  : "Get started by creating your first todo"}
               </p>
               {!searchTerm && (
                 <Button asChild>
@@ -150,12 +161,17 @@ export default function HomePage() {
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {filteredTodos.map((todo) => (
-                <TodoCard key={todo.id} todo={todo} onToggle={handleToggle} onDelete={handleDelete} />
+                <TodoCard
+                  key={todo._id}
+                  todo={todo}
+                  onToggle={() => handleToggle(todo._id)}
+                  onDelete={() => handleDelete(todo._id)}
+                />
               ))}
             </div>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }
