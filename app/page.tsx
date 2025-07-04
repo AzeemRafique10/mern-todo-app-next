@@ -6,10 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Plus, Search } from "lucide-react";
 import Link from "next/link";
 import { TodoCard } from "@/components/todo-card";
-import type { Todo } from "@/lib/db";
+import type { TodoType } from "@/lib/db";
 
 export default function HomePage() {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<TodoType[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 

@@ -59,17 +59,15 @@ export async function createTodo(
 
 export async function updateTodo(
   id: string,
-  title: string,
-  description: string,
-  priority: string,
-  completed: boolean
+  updates: Partial<{
+    title: string;
+    description: string;
+    priority: string;
+    completed: boolean;
+  }>
 ) {
   await connectToDatabase();
-  return Todo.findByIdAndUpdate(
-    id,
-    { title, description, priority, completed },
-    { new: true }
-  );
+  return Todo.findByIdAndUpdate(id, updates, { new: true });
 }
 
 export async function deleteTodo(id: string) {

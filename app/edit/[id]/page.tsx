@@ -18,10 +18,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft, Edit } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { Todo } from "@/lib/db";
+import type { TodoType } from "@/lib/db";
 
 export default function EditTodoPage({ params }: { params: { id: string } }) {
-  const [todo, setTodo] = useState<Todo | null>(null);
+  const [todo, setTodo] = useState<TodoType | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("medium");
@@ -238,11 +238,11 @@ export default function EditTodoPage({ params }: { params: { id: string } }) {
               <div className="text-sm text-gray-600">
                 <p>
                   <strong>Created:</strong>{" "}
-                  {new Date(todo.created_at).toLocaleString()}
+                  {new Date(todo.createdAt).toLocaleString()}
                 </p>
                 <p>
                   <strong>Last Updated:</strong>{" "}
-                  {new Date(todo.updated_at).toLocaleString()}
+                  {new Date(todo.updatedAt).toLocaleString()}
                 </p>
               </div>
             </CardContent>

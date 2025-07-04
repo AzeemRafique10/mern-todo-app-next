@@ -9,6 +9,33 @@ import {
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const id = params.id;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "Invalid ID format" }, { status: 400 });
+    }
+
+    const todo = await getTodoById(id);
+
+    if (!todo) {
+      return NextResponse.json({ error: "Todo not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(todo);
+  } catch (error) {
+    console.error("Error fetching todo by ID:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch todo" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -17,13 +44,12 @@ export async function PUT(
     const id = params.id;
     const { title, description, priority, completed } = await request.json();
 
-    const updated = await updateTodo(
-      id,
+    const updated = await updateTodo(id, {
       title,
       description,
       priority,
-      completed
-    );
+      completed,
+    });
 
     if (!updated) {
       return NextResponse.json({ error: "Todo not found" }, { status: 404 });

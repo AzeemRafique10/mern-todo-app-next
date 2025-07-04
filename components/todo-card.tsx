@@ -61,7 +61,7 @@ export function TodoCard({ todo, onToggle, onDelete }: TodoCardProps) {
           </span>
           <div className="flex space-x-2">
             <Button variant="outline" size="sm" asChild>
-              <Link href={`/edit/${todo.id}`}>
+              <Link href={`/todos/${todo.id}`}>
                 <Edit className="w-4 h-4 mr-1" />
                 Edit
               </Link>
